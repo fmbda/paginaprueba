@@ -45,12 +45,24 @@
       console.log('[GAIA] Widget cargado');
     };
 
-    // Callback cuando inicia un chat – útil para inspeccionar metadatos
+    // Capturar el chatId y loguearlo
     Tawk_API.onChatStarted = function () {
       console.log('[GAIA] Chat iniciado');
-      // Algunos datos útiles
-      console.log('Estado:', Tawk_API.getStatus && Tawk_API.getStatus());
-      // Muchos metadatos extra (chatId, visitor, etc.) llegan por webhook; esto es solo para debug local
+    
+      // Intentar obtener el ID de conversación
+      if (typeof Tawk_API.getConversationID === 'function') {
+        let chatId = Tawk_API.getConversationID();
+        console.log('[GAIA] ChatID:', chatId);
+    
+        // Opcional: Enviar el chatId a tu API de GAIA
+        fetch('https://itrischat-production.up.railway.app/registrar-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chatId: chatId })
+        });
+      } else {
+        console.warn('⚠️ La función getConversationID no está disponible en este evento.');
+      }
     };
 
     // Inserción asíncrona del script de tawk
