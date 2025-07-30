@@ -45,24 +45,18 @@
       console.log('[GAIA] Widget cargado');
     };
 
-    // Capturar el chatId y loguearlo
     Tawk_API.onChatStarted = function () {
       console.log('[GAIA] Chat iniciado');
     
-      // Intentar obtener el ID de conversación
-      if (typeof Tawk_API.getConversationID === 'function') {
-        let chatId = Tawk_API.getConversationID();
-        console.log('[GAIA] ChatID:', chatId);
-    
-        // Opcional: Enviar el chatId a tu API de GAIA
-        fetch('https://itrischat-production.up.railway.app/registrar-chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chatId: chatId })
-        });
-      } else {
-        console.warn('⚠️ La función getConversationID no está disponible en este evento.');
-      }
+      setTimeout(() => {
+        if (typeof Tawk_API.getConversationID === 'function') {
+          let chatId = Tawk_API.getConversationID();
+          console.log('[GAIA] ChatID detectado:', chatId || '(no disponible aún)');
+          window.GAIA_CHAT_ID = chatId;
+        } else {
+          console.log('[GAIA] Función getConversationID no disponible');
+        }
+      }, 2000); // espera 2 segundos antes de intentar obtenerlo
     };
 
     // Inserción asíncrona del script de tawk
