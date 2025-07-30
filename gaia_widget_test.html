@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Prueba del widget GAIA – tawk.to</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {font-family: system-ui, sans-serif; margin: 2rem; background:#f9fafb; color:#111827;}
+    h1 {font-size: 1.5rem; margin-bottom: .5rem;}
+    p {margin-bottom: 1rem;}
+    code {background:#e5e7eb; padding:2px 4px; border-radius:4px;}
+    footer {margin-top:3rem; font-size:.875rem; color:#6b7280;}
+  </style>
+</head>
+<body>
+  <h1>Prueba local del widget GAIA</h1>
+  <p>Esta página embebe el widget de <a href="https://www.tawk.to" target="_blank">tawk.to</a> vinculado a tu propiedad de GAIA. Abrí el chat (esquina inferior derecha) para probar la integración y verificar que recibís el <em>chatId</em>, nombre y otros metadatos.</p>
+  <p><strong>📌 Pasos previos</strong></p>
+  <ol>
+    <li>En el dashboard de tawk.to copiá el <code>propertyId</code> y <code>widgetId</code> de la propiedad que usa la nueva versión de GAIA.</li>
+    <li>Reemplazá los placeholders <code>PROPERTY_ID</code> y <code>WIDGET_ID</code> en el script de abajo.</li>
+    <li>Si querés forzar datos de prueba (nombre, email, empresa), completá el objeto <code>Tawk_API.visitor</code>.</li>
+    <li>Guardá este archivo y abrilo con el explorador o servilo con <code>python -m http.server</code>.</li>
+  </ol>
+
+  <!-- Inicio del script del widget -->
+  <script type="text/javascript">
+    // API global de tawk
+    var Tawk_API = Tawk_API || {};
+    Tawk_LoadStart = new Date();
+
+    /*
+       ⚙️ Datos opcionales para la sesión de visitante.
+       Si tenés el modo seguro (Secure Mode) activado, agregá la propiedad "hash" correspondiente.
+    */
+    Tawk_API.visitor = {
+      name : 'Tester Local',
+      email : 'tester@example.com',
+      empresa : 'Itris (demo)'
+      // hash : 'HMAC_SHA256(...)'
+    };
+
+    // Callback cuando el widget termine de cargar
+    Tawk_API.onLoad = function () {
+      console.log('[GAIA] Widget cargado');
+    };
+
+    // Callback cuando inicia un chat – útil para inspeccionar metadatos
+    Tawk_API.onChatStarted = function () {
+      console.log('[GAIA] Chat iniciado');
+      // Algunos datos útiles
+      console.log('Estado:', Tawk_API.getStatus && Tawk_API.getStatus());
+      // Muchos metadatos extra (chatId, visitor, etc.) llegan por webhook; esto es solo para debug local
+    };
+
+    // Inserción asíncrona del script de tawk
+    (function() {
+      var s1 = document.createElement('script'), s0 = document.getElementsByTagName('script')[0];
+      s1.async = true;
+      // 🔄 Reemplazá PROPERTY_ID y WIDGET_ID
+      s1.src = 'https://embed.tawk.to/56424e738fe02a613d44bde2/1j1avfmhf';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+  <!-- Fin del script del widget -->
+
+  <footer>
+    <p>© Itris – Página de pruebas local. Basado en la documentación oficial de la <em>JavaScript API</em> y <em>Webhooks</em> de tawk.to.</p>
+  </footer>
+</body>
+</html>
